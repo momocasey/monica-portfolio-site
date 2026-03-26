@@ -1,359 +1,906 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monica — Creative & Strategist</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monica Ross — Portfolio</title>
+    <style>
+        :root {
+            --bg: #413ca2;
+            --bg-dark: #0a0a0a;
+            --fg-massive: #050505;
+            --fg-detail: #ffffff;
+            --accent: #f02128;
+            --font-display: "Arial Black", "Impact", "Helvetica Neue", Helvetica, sans-serif;
+            --font-detail: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            --drawer-height: 80px;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--fg-massive);
+            font-family: var(--font-display);
+            width: 100%;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            cursor: crosshair;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding-top: 2vh;
+        }
+        .row {
+            font-size: 26vw;
+            line-height: 0.85;
+            letter-spacing: -0.06em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            color: var(--fg-massive);
+            font-weight: 900;
+            margin-bottom: -1vw;
+            padding-bottom: 0.5vw;
+            pointer-events: none;
+        }
+        .row.name {
+            color: #ffffff;
+        }
+        .row.bg-text {
+            font-size: 18vw;
+        }
+        .row:nth-child(even) {
+            align-self: flex-end;
+            text-align: right;
+        }
+
+        /* ===== FLOATING NODES ===== */
+        .node {
+            position: fixed;
+            background-color: var(--accent);
+            border-radius: 50%;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            will-change: transform, width, height, top, left, right, bottom, opacity;
+            transition: none;
+        }
+        .node::after {
+            content: attr(data-principle);
+            color: var(--bg);
+            font-family: var(--font-detail);
+            font-weight: 800;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            text-align: center;
+        }
+        .node:hover::after {
+            opacity: 1;
+        }
+
+        /* Starting positions */
+        .n1 { width: 15vw; height: 15vw; top: 5%; left: 10%; }
+        .n2 { width: 12vw; height: 12vw; top: 15%; right: 15%; }
+        .n3 { width: 18vw; height: 18vw; top: 40%; left: -5%; }
+        .n4 { width: 10vw; height: 10vw; top: 35%; right: 5%; }
+        .n5 { width: 14vw; height: 14vw; bottom: 25%; left: 20%; }
+        .n6 { width: 16vw; height: 16vw; bottom: 30%; right: -2%; }
+
+        /* ===== GRADIENT TRANSITION ===== */
+        .gradient-transition {
+            height: 200px;
+            background: linear-gradient(to bottom, var(--bg), var(--bg-dark));
+            position: relative;
+        }
+
+        /* ===== CORE FOCUS SECTION ===== */
+        .core-focus {
+            background-color: var(--bg-dark);
+            padding: 60px 48px 60px;
+            position: relative;
+            z-index: 1;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 56px;
+        }
+        .section-line {
+            width: 40px;
+            height: 3px;
+            background-color: var(--accent);
+        }
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(28px, 4vw, 48px);
+            font-weight: 900;
+            color: var(--fg-detail);
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+        .focus-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .focus-card {
+            background-color: var(--bg-dark);
+            padding: 40px 36px;
+            position: relative;
+            transition: background-color 0.4s ease;
+        }
+        .focus-card:hover {
+            background-color: #111;
+        }
+        .focus-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .focus-card:hover .focus-dot {
+            box-shadow: 0 0 20px rgba(240, 33, 40, 0.5);
+        }
+        .focus-label {
+            font-family: var(--font-detail);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+        }
+        .focus-name {
+            font-family: var(--font-display);
+            font-size: clamp(20px, 2.5vw, 28px);
+            font-weight: 900;
+            color: var(--fg-detail);
+            margin-bottom: 16px;
+            line-height: 1.1;
+        }
+        .focus-desc {
+            font-family: var(--font-detail);
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.6;
+            max-width: 340px;
+        }
+
+        /* SVG connectors between focus dots */
+        .focus-grid-wrapper {
+            position: relative;
+        }
+        .grid-connectors {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* ===== PHILOSOPHY SECTION ===== */
+        .gradient-transition-2 {
+            height: 60px;
+            background: linear-gradient(to bottom, var(--bg-dark), var(--bg));
+            position: relative;
+        }
+        .philosophy {
+            background-color: var(--bg);
+            padding: 60px 48px 40px;
+            min-height: 80vh;
+            position: relative;
+            overflow: hidden;
+        }
+        .philosophy-bg-text {
+            position: absolute;
+            top: -5%;
+            left: -2%;
+            font-family: var(--font-display);
+            font-size: clamp(150px, 20vw, 300px);
+            font-weight: 900;
+            color: rgba(255,255,255,0.04);
+            text-transform: uppercase;
+            line-height: 0.85;
+            pointer-events: none;
+            letter-spacing: -0.04em;
+            white-space: nowrap;
+        }
+        .philosophy-quote {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+        .philosophy-quote blockquote {
+            font-family: var(--font-display);
+            font-size: clamp(28px, 4.5vw, 56px);
+            font-weight: 900;
+            color: var(--fg-detail);
+            line-height: 1.15;
+            margin-bottom: 48px;
+        }
+        .philosophy-quote .accent-italic {
+            color: var(--accent);
+            font-style: italic;
+        }
+        .connection-underline-wrapper {
+            display: inline-block;
+            position: relative;
+        }
+        .connection-underline {
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--accent);
+            border-radius: 2px;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+        }
+        .connection-underline.drawn {
+            transform: scaleX(1);
+        }
+
+        .philosophy-aside {
+            position: relative;
+            z-index: 1;
+            max-width: 400px;
+            margin-left: auto;
+            background: rgba(255,255,255,0.06);
+            border-left: 2px solid rgba(255,255,255,0.1);
+            padding: 24px 28px;
+            font-family: var(--font-detail);
+            font-size: 14px;
+            font-style: italic;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.7;
+        }
+
+        /* Second set of swooping dots */
+        .swoop-dot {
+            position: fixed;
+            background-color: var(--accent);
+            border-radius: 50%;
+            z-index: 5;
+            pointer-events: none;
+            will-change: transform, width, height, top, left, opacity;
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cta-section {
+            height: 60vh;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 60px 24px 120px;
+        }
+        .cta-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 8;
+            pointer-events: none;
+        }
+        .cta-title {
+            font-family: var(--font-display);
+            font-size: clamp(48px, 12vw, 160px);
+            font-weight: 900;
+            color: var(--bg-dark);
+            line-height: 0.95;
+            text-transform: uppercase;
+            letter-spacing: -0.04em;
+        }
+        .cta-button {
+            display: inline-block;
+            margin-top: 48px;
+            padding: 18px 52px;
+            background: var(--bg-dark);
+            color: var(--fg-detail);
+            font-family: var(--font-detail);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            text-decoration: none;
+            border-radius: 100px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .philosophy {
+                padding: 80px 24px 100px;
+            }
+            .philosophy-aside {
+                max-width: 100%;
+                margin-left: 0;
+                margin-top: 40px;
+            }
+            .cta-section {
+                padding: 60px 24px 140px;
+            }
+        }
+
+        /* ===== DRAWER ===== */
+        .drawer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--fg-massive);
+            color: var(--fg-detail);
+            z-index: 10;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(calc(100% - var(--drawer-height)));
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 0 24px 40px 24px;
+            font-family: var(--font-detail);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .drawer.open {
+            transform: translateY(0);
+        }
+        .drawer-handle {
+            height: var(--drawer-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        .drawer-handle .title {
+            font-weight: 800;
+            font-size: 16px;
+        }
+        .drawer-handle .toggle-icon {
+            font-size: 24px;
+            transition: transform 0.5s ease;
+        }
+        .drawer.open .toggle-icon {
+            transform: rotate(180deg);
+        }
+        .drawer-content {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .data-section {
+            margin-bottom: 20px;
+        }
+        .data-title {
+            display: block;
+            margin-bottom: 6px;
+            opacity: 0.5;
+            font-size: 10px;
+        }
+        .data-link {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid var(--accent);
+            cursor: pointer;
+        }
+        .brand-badge {
+            display: inline-block;
+            background-color: var(--accent);
+            color: var(--fg-massive);
+            padding: 4px 8px;
+            font-weight: 800;
+            margin-top: 12px;
+        }
+
+        /* ===== SCROLL REVEAL ===== */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .focus-grid {
+                grid-template-columns: 1fr;
+            }
+            .core-focus {
+                padding: 60px 24px 100px;
+            }
+            .drawer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- Cursor glow effect -->
-  <div class="cursor-glow" id="cursorGlow"></div>
 
-  <!-- Navigation -->
-  <nav class="nav">
-    <div class="nav-inner">
-      <a href="#" class="nav-logo">monica.</a>
-      <div class="nav-links">
-        <a href="#about">About</a>
-        <a href="#work">Work</a>
-        <a href="#vibes">Vibes</a>
-        <a href="#connect" class="nav-cta">Let's Connect</a>
-      </div>
-      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-  </nav>
+    <!-- Floating Nodes (6 total — 4 swoop to cards, 2 fade out) -->
+    <div class="node n1" data-principle="VISION" id="node0"></div>
+    <div class="node n2" data-principle="STORY" id="node1"></div>
+    <div class="node n3" data-principle="BRAND" id="node2"></div>
+    <div class="node n4" data-principle="GROW" id="node3"></div>
+    <div class="node n5" data-principle="CREATE" id="node4"></div>
+    <div class="node n6" data-principle="IMPACT" id="node5"></div>
 
-  <!-- Mobile Menu -->
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="#about">About</a>
-    <a href="#work">Work</a>
-    <a href="#vibes">Vibes</a>
-    <a href="#connect">Let's Connect</a>
-  </div>
+    <!-- Hero -->
+    <section class="hero" id="hero">
+        <div class="row name">MONICA</div>
+        <div class="row name">ROSS</div>
+        <div class="row bg-text">STRATEGY</div>
+        <div class="row bg-text">GROWTH</div>
+        <div class="row bg-text">EXECUTION</div>
+        <div class="row bg-text">SCALING</div>
+        <div class="row bg-text">SYSTEMS</div>
+    </section>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="hero-bg-shapes">
-      <div class="shape shape-1"></div>
-      <div class="shape shape-2"></div>
-      <div class="shape shape-3"></div>
-      <div class="shape shape-4"></div>
-      <div class="shape shape-5"></div>
-    </div>
-    <div class="hero-content">
-      <div class="hero-badge">
-        <span class="badge-dot"></span>
-        Available for opportunities
-      </div>
-      <h1 class="hero-title">
-        Hey, I'm <span class="gradient-text">Monica</span><span class="wave">&#x1F44B;</span>
-      </h1>
-      <p class="hero-subtitle">
-        I create <span class="typed-text" id="typedText"></span><span class="typed-cursor">|</span>
-      </p>
-      <p class="hero-description">
-        A multifaceted creative blending strategy, design, and storytelling
-        to build brands that feel as good as they look.
-      </p>
-      <div class="hero-actions">
-        <a href="#work" class="btn btn-primary">
-          See My Work
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-        </a>
-        <a href="#connect" class="btn btn-secondary">Get in Touch</a>
-      </div>
-      <div class="hero-social">
-        <a href="#" class="social-link" aria-label="LinkedIn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        </a>
-        <a href="#" class="social-link" aria-label="Twitter/X">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        </a>
-        <a href="#" class="social-link" aria-label="Instagram">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-        </a>
-        <a href="#" class="social-link" aria-label="TikTok">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
-        </a>
-      </div>
-    </div>
-    <div class="scroll-indicator">
-      <div class="scroll-line"></div>
-    </div>
-  </section>
+    <!-- Gradient Transition -->
+    <div class="gradient-transition" id="gradientZone"></div>
 
-  <!-- About Section -->
-  <section class="about" id="about">
-    <div class="container">
-      <div class="section-label">
-        <span class="label-line"></span>
-        About Me
-      </div>
-      <div class="about-grid">
-        <div class="about-photo-col">
-          <div class="about-photo">
-            <div class="photo-placeholder">
-              <span>Your Photo Here</span>
+    <!-- Core Focus Section -->
+    <section class="core-focus" id="coreFocus">
+        <div class="section-header reveal-up">
+            <div class="section-line"></div>
+            <h2 class="section-title">Core Focus</h2>
+        </div>
+        <div class="focus-grid-wrapper">
+            <svg class="grid-connectors" id="gridConnectors"></svg>
+            <div class="focus-grid">
+                <div class="focus-card reveal-up">
+                    <div class="focus-dot" id="focusDot0"></div>
+                    <div class="focus-label">01 // Structure</div>
+                    <div class="focus-name">Organizational Design</div>
+                    <div class="focus-desc">Moving away from rigid hierarchies towards fluid, high-velocity environments that empower autonomy.</div>
+                </div>
+                <div class="focus-card reveal-up">
+                    <div class="focus-dot" id="focusDot1"></div>
+                    <div class="focus-label">02 // Force Multiplier</div>
+                    <div class="focus-name">Executive Strategy</div>
+                    <div class="focus-desc">Aligning cross-functional priorities and distilling extreme complexity into actionable roadmaps.</div>
+                </div>
+                <div class="focus-card reveal-up">
+                    <div class="focus-dot" id="focusDot2"></div>
+                    <div class="focus-label">03 // Behavior</div>
+                    <div class="focus-name">Culture Architecture</div>
+                    <div class="focus-desc">Designing the invisible systems of behavior where high performance is the natural byproduct.</div>
+                </div>
+                <div class="focus-card reveal-up">
+                    <div class="focus-dot" id="focusDot3"></div>
+                    <div class="focus-label">04 // Flow</div>
+                    <div class="focus-name">Team Topologies</div>
+                    <div class="focus-desc">Optimizing for cognitive load. Ensuring the right people are solving the right problems at the right frequency.</div>
+                </div>
             </div>
-            <div class="photo-accent"></div>
-          </div>
         </div>
-        <div class="about-text-col">
-          <h2 class="about-heading">
-            I believe the best brands are built at the intersection of
-            <span class="gradient-text">strategy</span> and
-            <span class="gradient-text">soul</span>.
-          </h2>
-          <p class="about-body">
-            I'm a creative professional passionate about building meaningful brands
-            and experiences. Whether it's crafting a visual identity, developing content
-            strategy, or bringing an idea to life — I approach everything with intention
-            and heart.
-          </p>
-          <p class="about-body">
-            When I'm not working, you'll find me curating playlists, exploring new
-            coffee shops, or deep-diving into the latest trends in design and culture.
-          </p>
-          <div class="about-stats">
-            <div class="stat">
-              <span class="stat-number" data-target="5">0</span><span class="stat-suffix">+</span>
-              <span class="stat-label">Years Experience</span>
-            </div>
-            <div class="stat">
-              <span class="stat-number" data-target="30">0</span><span class="stat-suffix">+</span>
-              <span class="stat-label">Projects Completed</span>
-            </div>
-            <div class="stat">
-              <span class="stat-number" data-target="15">0</span><span class="stat-suffix">+</span>
-              <span class="stat-label">Happy Clients</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Skills/What I Do Section -->
-  <section class="skills">
-    <div class="container">
-      <div class="section-label">
-        <span class="label-line"></span>
-        What I Do
-      </div>
-      <h2 class="section-heading">
-        Crafting experiences across <span class="gradient-text">every touchpoint</span>.
-      </h2>
-      <div class="skills-grid">
-        <div class="skill-card" data-tilt>
-          <div class="skill-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
-          </div>
-          <h3>Brand & Identity</h3>
-          <p>Creating visual identities that capture who you are and resonate with who you want to reach.</p>
-        </div>
-        <div class="skill-card" data-tilt>
-          <div class="skill-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-          </div>
-          <h3>Content Creation</h3>
-          <p>Storytelling through visuals, words, and experiences that spark connection and drive engagement.</p>
-        </div>
-        <div class="skill-card" data-tilt>
-          <div class="skill-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-          </div>
-          <h3>Strategy</h3>
-          <p>Turning big-picture vision into actionable plans with clear goals, timelines, and measurable impact.</p>
-        </div>
-        <div class="skill-card" data-tilt>
-          <div class="skill-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-          </div>
-          <h3>Community Building</h3>
-          <p>Growing and nurturing communities that turn audiences into advocates and customers into fans.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+    <!-- Gradient Transition 2 -->
+    <div class="gradient-transition-2" id="gradientZone2"></div>
 
-  <!-- Work/Projects Section -->
-  <section class="work" id="work">
-    <div class="container">
-      <div class="section-label">
-        <span class="label-line"></span>
-        Featured Work
-      </div>
-      <h2 class="section-heading">
-        Things I've been <span class="gradient-text">building</span>.
-      </h2>
-      <div class="work-grid">
-        <div class="work-card work-card-large">
-          <div class="work-card-image">
-            <div class="work-placeholder" style="background: linear-gradient(135deg, #e0c3fc, #8ec5fc);">
-              <span>Project One</span>
+    <!-- Philosophy Section -->
+    <section class="philosophy" id="philosophy">
+        <div class="philosophy-bg-text">CHAOS</div>
+        <div class="philosophy-quote">
+            <blockquote>
+                Translating <span class="accent-italic">systemic chaos</span> into organizational clarity is not about control. It's about <span class="connection-underline-wrapper" id="connectionWord">connection.<span class="connection-underline" id="connectionLine"></span></span>
+            </blockquote>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="ctaSection">
+        <div class="cta-content" id="ctaContent">
+            <h2 class="cta-title">LET'S<br>CONNECT<br>THE DOTS.</h2>
+            <a href="mailto:hello@monicaross.com" class="cta-button">GET IN TOUCH</a>
+        </div>
+    </section>
+
+    <!-- Swooping dots for philosophy section -->
+    <div class="swoop-dot" id="swoopDot0"></div>
+    <div class="swoop-dot" id="swoopDot1"></div>
+    <div class="swoop-dot" id="swoopDot2"></div>
+    <div class="swoop-dot" id="swoopDot3"></div>
+
+    <!-- Drawer -->
+    <div class="drawer" id="drawer">
+        <div class="drawer-handle" onclick="toggleDrawer()">
+            <div class="title">MONICA ROSS // INFO</div>
+            <div class="toggle-icon">&#x2191;</div>
+        </div>
+        <div class="drawer-content">
+            <div class="data-section">
+                <span class="data-title">ROLE:</span>
+                CREATIVE &amp; BRAND STRATEGIST
+                <br>CONTENT &amp; STORYTELLING
+                <br>LOS ANGELES
             </div>
-          </div>
-          <div class="work-card-info">
-            <span class="work-tag">Brand Strategy</span>
-            <h3>Project Name</h3>
-            <p>A brief description of the project and the impact it made.</p>
-          </div>
-        </div>
-        <div class="work-card">
-          <div class="work-card-image">
-            <div class="work-placeholder" style="background: linear-gradient(135deg, #fbc2eb, #a6c1ee);">
-              <span>Project Two</span>
+            <div class="data-section">
+                <span class="data-title">CORE FOCUS:</span>
+                BRAND IDENTITY &amp; STRATEGY
+                <br>CONTENT CREATION
+                <br>COMMUNITY BUILDING
+                <br>PERSONAL BRANDING
             </div>
-          </div>
-          <div class="work-card-info">
-            <span class="work-tag">Content</span>
-            <h3>Project Name</h3>
-            <p>A brief description of the project and the impact it made.</p>
-          </div>
-        </div>
-        <div class="work-card">
-          <div class="work-card-image">
-            <div class="work-placeholder" style="background: linear-gradient(135deg, #a1c4fd, #c2e9fb);">
-              <span>Project Three</span>
+            <div class="data-section">
+                <span class="data-title">PHILOSOPHY:</span>
+                BUILDING BRANDS THAT FEEL
+                <br>AS GOOD AS THEY LOOK.
+                <br>STRATEGY WITH SOUL.
+                <br>CREATIVITY WITH PURPOSE.
             </div>
-          </div>
-          <div class="work-card-info">
-            <span class="work-tag">Community</span>
-            <h3>Project Name</h3>
-            <p>A brief description of the project and the impact it made.</p>
-          </div>
-        </div>
-        <div class="work-card work-card-large">
-          <div class="work-card-image">
-            <div class="work-placeholder" style="background: linear-gradient(135deg, #fdcbf1, #e6dee9);">
-              <span>Project Four</span>
+            <div class="data-section">
+                <span class="data-title">CONTACT:</span>
+                <a href="#" class="data-link">EMAIL</a> &nbsp;
+                <a href="#" class="data-link">LINKEDIN</a> &nbsp;
+                <a href="#" class="data-link">INSTAGRAM</a>
+                <br>
+                <div class="brand-badge">AVAILABLE 2026</div>
             </div>
-          </div>
-          <div class="work-card-info">
-            <span class="work-tag">Design</span>
-            <h3>Project Name</h3>
-            <p>A brief description of the project and the impact it made.</p>
-          </div>
         </div>
-      </div>
     </div>
-  </section>
 
-  <!-- Vibes/Personality Section -->
-  <section class="vibes" id="vibes">
-    <div class="container">
-      <div class="section-label">
-        <span class="label-line"></span>
-        The Vibes
-      </div>
-      <h2 class="section-heading">
-        A little more about <span class="gradient-text">me</span>.
-      </h2>
-      <div class="vibes-marquee">
-        <div class="marquee-track">
-          <span class="marquee-item">Coffee Enthusiast</span>
-          <span class="marquee-divider">&diams;</span>
-          <span class="marquee-item">Playlist Curator</span>
-          <span class="marquee-divider">&diams;</span>
-          <span class="marquee-item">Design Lover</span>
-          <span class="marquee-divider">&diams;</span>
-          <span class="marquee-item">Brand Builder</span>
-          <span class="marquee-divider">&diams;</span>
-          <span class="marquee-item">Storyteller</span>
-          <span class="marquee-divider">&diams;</span>
-          <span class="marquee-item">Creative Thinker</span>
-          <span class="marquee-divider">&diams;</span>
-          <span class="marquee-item">Trend Spotter</span>
-          <span class="marquee-divider">&diams;</span>
-          <span class="marquee-item">Coffee Enthusiast</span>
-          <span class="marquee-divider">&diams;</span>
-          <span class="marquee-item">Playlist Curator</span>
-          <span class="marquee-divider">&diams;</span>
-          <span class="marquee-item">Design Lover</span>
-          <span class="marquee-divider">&diams;</span>
-          <span class="marquee-item">Brand Builder</span>
-          <span class="marquee-divider">&diams;</span>
-          <span class="marquee-item">Storyteller</span>
-          <span class="marquee-divider">&diams;</span>
-          <span class="marquee-item">Creative Thinker</span>
-          <span class="marquee-divider">&diams;</span>
-          <span class="marquee-item">Trend Spotter</span>
-          <span class="marquee-divider">&diams;</span>
-        </div>
-      </div>
-      <div class="vibes-grid">
-        <div class="vibe-card">
-          <div class="vibe-emoji">&#x2615;</div>
-          <h3>Currently Sipping</h3>
-          <p>Oat milk latte with a splash of vanilla</p>
-        </div>
-        <div class="vibe-card">
-          <div class="vibe-emoji">&#x1F3B5;</div>
-          <h3>On Repeat</h3>
-          <p>A curated mix of R&B, lo-fi, and feel-good pop</p>
-        </div>
-        <div class="vibe-card">
-          <div class="vibe-emoji">&#x1F4DA;</div>
-          <h3>Currently Reading</h3>
-          <p>The latest on branding, culture, and personal growth</p>
-        </div>
-        <div class="vibe-card">
-          <div class="vibe-emoji">&#x2728;</div>
-          <h3>Manifesting</h3>
-          <p>Big moves, bold ideas, and beautiful collaborations</p>
-        </div>
-      </div>
-    </div>
-  </section>
+    <script>
+        // ===== DRAWER =====
+        function toggleDrawer() {
+            document.getElementById('drawer').classList.toggle('open');
+        }
 
-  <!-- Connect/CTA Section -->
-  <section class="connect" id="connect">
-    <div class="connect-glow"></div>
-    <div class="container">
-      <h2 class="connect-heading">
-        Let's create something <span class="gradient-text">beautiful</span> together.
-      </h2>
-      <p class="connect-subtext">
-        Whether you have a project in mind, want to collaborate, or just want to say hey —
-        I'd love to hear from you.
-      </p>
-      <div class="connect-actions">
-        <a href="mailto:hello@monica.com" class="btn btn-primary btn-large">
-          Say Hello
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-        </a>
-      </div>
-      <div class="connect-social">
-        <a href="#" class="connect-social-link">LinkedIn</a>
-        <span class="connect-divider">/</span>
-        <a href="#" class="connect-social-link">Twitter</a>
-        <span class="connect-divider">/</span>
-        <a href="#" class="connect-social-link">Instagram</a>
-        <span class="connect-divider">/</span>
-        <a href="#" class="connect-social-link">TikTok</a>
-      </div>
-    </div>
-  </section>
+        // ===== NODE SETUP =====
+        const nodeEls = [
+            document.getElementById('node0'),
+            document.getElementById('node1'),
+            document.getElementById('node2'),
+            document.getElementById('node3'),
+            document.getElementById('node4'),
+            document.getElementById('node5'),
+        ];
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-inner">
-        <span class="footer-logo">monica.</span>
-        <span class="footer-note">Designed with intention. Built with heart.</span>
-        <span class="footer-copy">&copy; 2026 Monica. All rights reserved.</span>
-      </div>
-    </div>
-  </footer>
+        const focusDots = [
+            document.getElementById('focusDot0'),
+            document.getElementById('focusDot1'),
+            document.getElementById('focusDot2'),
+            document.getElementById('focusDot3'),
+        ];
 
-  <script src="script.js"></script>
+        // Store original hero positions (computed from CSS %)
+        function getHeroPositions() {
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            return [
+                { x: vw * 0.10, y: vh * 0.05, size: vw * 0.15 },   // n1
+                { x: vw * 0.85 - vw * 0.12, y: vh * 0.15, size: vw * 0.12 },  // n2 (right: 15%)
+                { x: vw * -0.05, y: vh * 0.40, size: vw * 0.18 },  // n3
+                { x: vw * 0.95 - vw * 0.10, y: vh * 0.35, size: vw * 0.10 },  // n4 (right: 5%)
+                { x: vw * 0.20, y: vh * 0.75 - vw * 0.14, size: vw * 0.14 },  // n5 (bottom: 25%)
+                { x: vw * 1.02 - vw * 0.16, y: vh * 0.70 - vw * 0.16, size: vw * 0.16 },  // n6 (right: -2%)
+            ];
+        }
+
+        // Get target positions (center of each focus dot, in viewport coords)
+        function getFocusDotPositions() {
+            return focusDots.map(dot => {
+                const r = dot.getBoundingClientRect();
+                return {
+                    x: r.left + r.width / 2,
+                    y: r.top + r.height / 2 + window.scrollY, // absolute Y
+                    size: 10
+                };
+            });
+        }
+
+        // Mouse parallax offset
+        let mouseOffsetX = 0, mouseOffsetY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseOffsetX = (e.clientX / window.innerWidth - 0.5);
+            mouseOffsetY = (e.clientY / window.innerHeight - 0.5);
+        });
+
+        // Easing: smooth cubic
+        function easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+
+        // ===== SCROLL-DRIVEN ANIMATION =====
+        function updateNodes() {
+            const scrollY = window.scrollY;
+            const heroH = document.getElementById('hero').offsetHeight;
+            const gradientZone = document.getElementById('gradientZone');
+            const transitionStart = heroH * 0.5; // start swooping halfway through hero
+            const transitionEnd = heroH + gradientZone.offsetHeight; // finish at end of gradient
+
+            const rawProgress = (scrollY - transitionStart) / (transitionEnd - transitionStart);
+            const progress = Math.max(0, Math.min(1, rawProgress));
+            const easedProgress = easeInOutCubic(progress);
+
+            const heroPos = getHeroPositions();
+            const targetPos = getFocusDotPositions();
+
+            // Map: nodes 0-3 go to focus dots 0-3, nodes 4-5 fade out
+            nodeEls.forEach((node, i) => {
+                const start = heroPos[i];
+                const parallaxAmount = (1 - easedProgress) * (i + 1) * 20;
+
+                if (i < 4) {
+                    // Swoop to focus dot
+                    const target = targetPos[i];
+                    const currentX = start.x + (target.x - start.x - target.size / 2) * easedProgress;
+                    const currentY = start.y + (target.y - scrollY - start.y) * easedProgress;
+                    const currentSize = start.size + (target.size - start.size) * easedProgress;
+
+                    // Add mouse parallax that fades out during transition
+                    const px = mouseOffsetX * parallaxAmount;
+                    const py = mouseOffsetY * parallaxAmount;
+
+                    node.style.position = 'fixed';
+                    node.style.left = (currentX + px) + 'px';
+                    node.style.top = (currentY + py) + 'px';
+                    node.style.width = currentSize + 'px';
+                    node.style.height = currentSize + 'px';
+                    node.style.right = 'auto';
+                    node.style.bottom = 'auto';
+                    node.style.opacity = 1;
+
+                    // Once fully landed, hide the node (the real focus-dot shows through)
+                    if (progress >= 0.98) {
+                        node.style.opacity = 0;
+                    }
+                } else {
+                    // Extra nodes: fade out and drift down
+                    const driftY = easedProgress * 200;
+                    const px = mouseOffsetX * parallaxAmount;
+                    const py = mouseOffsetY * parallaxAmount;
+
+                    node.style.position = 'fixed';
+                    node.style.left = (start.x + px) + 'px';
+                    node.style.top = (start.y + py + driftY) + 'px';
+                    node.style.width = (start.size * (1 - easedProgress * 0.6)) + 'px';
+                    node.style.height = (start.size * (1 - easedProgress * 0.6)) + 'px';
+                    node.style.right = 'auto';
+                    node.style.bottom = 'auto';
+                    node.style.opacity = 1 - easedProgress;
+                }
+            });
+
+            requestAnimationFrame(updateNodes);
+        }
+
+        requestAnimationFrame(updateNodes);
+
+        // ===== SVG CONNECTORS BETWEEN FOCUS CARDS =====
+        function drawGridConnectors() {
+            const svg = document.getElementById('gridConnectors');
+            const dots = document.querySelectorAll('.focus-dot');
+            const wrapper = document.querySelector('.focus-grid-wrapper');
+            const wrapperRect = wrapper.getBoundingClientRect();
+
+            svg.innerHTML = '';
+            svg.setAttribute('viewBox', `0 0 ${wrapperRect.width} ${wrapperRect.height}`);
+
+            const centers = [];
+            dots.forEach(dot => {
+                const r = dot.getBoundingClientRect();
+                centers.push({
+                    x: r.left + r.width / 2 - wrapperRect.left,
+                    y: r.top + r.height / 2 - wrapperRect.top
+                });
+            });
+
+            const connections = [[0,1],[0,2],[1,3],[2,3],[0,3]];
+            connections.forEach(([a, b]) => {
+                if (centers[a] && centers[b]) {
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', centers[a].x);
+                    line.setAttribute('y1', centers[a].y);
+                    line.setAttribute('x2', centers[b].x);
+                    line.setAttribute('y2', centers[b].y);
+                    line.setAttribute('stroke', 'rgba(240, 33, 40, 0.12)');
+                    line.setAttribute('stroke-width', '1');
+                    line.setAttribute('stroke-dasharray', '4 4');
+
+                    const anim = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+                    anim.setAttribute('attributeName', 'stroke-dashoffset');
+                    anim.setAttribute('from', '0');
+                    anim.setAttribute('to', '24');
+                    anim.setAttribute('dur', '3s');
+                    anim.setAttribute('repeatCount', 'indefinite');
+                    line.appendChild(anim);
+
+                    svg.appendChild(line);
+                }
+            });
+        }
+
+        // ===== SECOND SWOOP: Focus dots → Underline dots =====
+        const swoopDots = [
+            document.getElementById('swoopDot0'),
+            document.getElementById('swoopDot1'),
+            document.getElementById('swoopDot2'),
+            document.getElementById('swoopDot3'),
+        ];
+        const connectionWord = document.getElementById('connectionWord');
+        const connectionLine = document.getElementById('connectionLine');
+        const philosophySection = document.getElementById('philosophy');
+        const ctaSection = document.getElementById('ctaSection');
+        const ctaContent = document.getElementById('ctaContent');
+
+        // Fixed spread start positions — percentage of viewport, so they work at any size
+        const swoopStartPositions = [
+            { xPct: 0.10, yPct: -0.10 },
+            { xPct: 0.35, yPct: -0.15 },
+            { xPct: 0.60, yPct: -0.12 },
+            { xPct: 0.85, yPct: -0.08 },
+        ];
+
+        function updateSwoopDots() {
+            const vh = window.innerHeight;
+            const vw = window.innerWidth;
+
+            // === PHASE 1 PROGRESS: Swoop to underline ===
+            const philRect = philosophySection.getBoundingClientRect();
+            const rawSwoop = 1 - (philRect.top / (vh * 0.8));
+            const swoopProgress = Math.max(0, Math.min(1, rawSwoop));
+            const swoopEased = easeInOutCubic(swoopProgress);
+
+            // === PHASE 2 PROGRESS: Expand from underline to fill screen ===
+            // Driven by CTA section scrolling into view — completes in half the viewport scroll
+            const ctaRect = ctaSection.getBoundingClientRect();
+            const rawExpand = (1 - (ctaRect.top / vh)) * 2;
+            const expandProgress = Math.max(0, Math.min(1, rawExpand));
+            const expandEased = easeInOutCubic(expandProgress);
+
+            // Live position of "connection" word
+            const connRect = connectionWord.getBoundingClientRect();
+            const targetY = connRect.bottom + 4;
+
+            // Manage connection underline visibility
+            if (swoopProgress >= 0.92 && expandProgress < 0.1) {
+                connectionLine.classList.add('drawn');
+            } else {
+                connectionLine.classList.remove('drawn');
+            }
+
+            // Fade in CTA text as dots cover the screen
+            // Map expandEased 0.85–1.0 to opacity 0–1
+            const ctaOpacity = Math.max(0, Math.min(1, (expandEased - 0.85) / 0.15));
+            ctaContent.style.opacity = ctaOpacity;
+            ctaContent.style.pointerEvents = ctaOpacity > 0.5 ? 'auto' : 'none';
+
+            swoopDots.forEach((dot, i) => {
+                // Pinned position under "connection"
+                const pinnedX = connRect.left + (connRect.width * (i / 3));
+                const pinnedY = targetY;
+
+                if (expandProgress > 0.02 && swoopProgress >= 0.92) {
+                    // === PHASE 2: Expand outward to fill screen ===
+                    // Dots spread to quadrants of the screen
+                    const expandTargets = [
+                        { x: vw * 0.25, y: vh * 0.30 },
+                        { x: vw * 0.75, y: vh * 0.25 },
+                        { x: vw * 0.30, y: vh * 0.70 },
+                        { x: vw * 0.70, y: vh * 0.75 },
+                    ];
+                    const maxSize = Math.max(vw, vh) * 2.5;
+
+                    // Staged growth: visible circles first, then flood
+                    let currentSize;
+                    if (expandEased < 0.35) {
+                        // Stage 1: grow to clearly visible circles
+                        const sub = expandEased / 0.35;
+                        currentSize = 8 + (Math.min(vw, vh) * 0.18 - 8) * sub;
+                    } else {
+                        // Stage 2: flood the screen
+                        const sub = (expandEased - 0.35) / 0.65;
+                        currentSize = Math.min(vw, vh) * 0.18 + (maxSize - Math.min(vw, vh) * 0.18) * sub;
+                    }
+
+                    const currentX = pinnedX + (expandTargets[i].x - pinnedX) * expandEased;
+                    const currentY = pinnedY + (expandTargets[i].y - pinnedY) * expandEased;
+
+                    dot.style.position = 'fixed';
+                    dot.style.left = (currentX - currentSize / 2) + 'px';
+                    dot.style.top = (currentY - currentSize / 2) + 'px';
+                    dot.style.width = currentSize + 'px';
+                    dot.style.height = currentSize + 'px';
+                    dot.style.opacity = '1';
+                    dot.style.zIndex = '6';
+
+                } else if (swoopProgress <= 0) {
+                    // === HIDDEN ===
+                    dot.style.opacity = '0';
+
+                } else if (swoopProgress >= 0.92) {
+                    // === PINNED under "connection" ===
+                    dot.style.left = (pinnedX - 4) + 'px';
+                    dot.style.top = (pinnedY - 4) + 'px';
+                    dot.style.width = '8px';
+                    dot.style.height = '8px';
+                    dot.style.opacity = '1';
+                    dot.style.zIndex = '5';
+
+                } else {
+                    // === PHASE 1: Swooping from spread positions to underline ===
+                    const startX = vw * swoopStartPositions[i].xPct;
+                    const startY = vh * swoopStartPositions[i].yPct;
+                    const startSize = 24;
+                    const endSize = 8;
+
+                    const currentX = startX + (pinnedX - startX) * swoopEased;
+                    const currentY = startY + (pinnedY - startY) * swoopEased;
+                    const currentSize = startSize + (endSize - startSize) * swoopEased;
+
+                    dot.style.position = 'fixed';
+                    dot.style.left = (currentX - currentSize / 2) + 'px';
+                    dot.style.top = (currentY - currentSize / 2) + 'px';
+                    dot.style.width = currentSize + 'px';
+                    dot.style.height = currentSize + 'px';
+                    dot.style.opacity = Math.min(swoopEased * 1.5, 1);
+                    dot.style.zIndex = '5';
+                }
+            });
+
+            requestAnimationFrame(updateSwoopDots);
+        }
+
+        requestAnimationFrame(updateSwoopDots);
+
+        // ===== SCROLL REVEAL =====
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, i * 100);
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.05 });
+
+        document.querySelectorAll('.reveal-up').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Draw connectors once section is visible
+        const focusObserver = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                setTimeout(drawGridConnectors, 800);
+                focusObserver.unobserve(entries[0].target);
+            }
+        }, { threshold: 0.3 });
+        focusObserver.observe(document.getElementById('coreFocus'));
+
+        window.addEventListener('resize', drawGridConnectors);
+    </script>
 </body>
 </html>
